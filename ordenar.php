@@ -1,17 +1,8 @@
 
 <?php
-include("./conexion.php");
-function enviarDato($datoConcepto){
-    // echo $datoConcepto;
-    // die();
-    $conexion = Conexion();
-    $sentencia = $conexion->prepare("INSERT INTO 
-    `prueba` (`id`, 
-    `descripcion`, 
-    VALUES (NULL, 
-    '$datoConcepto'");
-    $sentencia->execute();
-}
+
+
+
 function convertirArreglo()
 {
     // OBTENER EL DATO DEL POST Y CONVERTIRLO A UN ARRAY
@@ -51,7 +42,7 @@ function obtener()
     // }
     $conceptoArreglo = array();
     $datoConcepto = "";
-    enviarDato($datoConcepto);
+
     for ($i = 1; $i < 3; $i++) {  # RECORRO PARA TRAER SOLO LOS CONCEPTOS DE FORMA MANUAL 
         $concepto = $convertir[$i][1];
         $datoConcepto = $concepto;
