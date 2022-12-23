@@ -1,4 +1,17 @@
+
 <?php
+include("./conexion.php");
+function enviarDato($datoConcepto){
+    // echo $datoConcepto;
+    // die();
+    $conexion = Conexion();
+    $sentencia = $conexion->prepare("INSERT INTO 
+    `prueba` (`id`, 
+    `descripcion`, 
+    VALUES (NULL, 
+    '$datoConcepto'");
+    $sentencia->execute();
+}
 function convertirArreglo()
 {
     // OBTENER EL DATO DEL POST Y CONVERTIRLO A UN ARRAY
@@ -22,16 +35,29 @@ function obtener()
     // RETURNA TODO EL ARRAY CONVERTIDO DEL LA FUNCION
     $convertir = convertirArreglo();
     $fecha = $convertir[0]; # ME TRAE DE MANERA MANUAL TODO LAS FECHAS QUE ESTAN EN LA POSICION 0
-
+    $valor = $convertir[1];
+    
+    // for ($j=1; $j < count($valor) ; $j++) { 
+    //     $valores = $valor[$j];
+    //     print_r($valores);
+    // }
     for ($i = 0; $i < 2; $i++) {
         unset($fecha[$i]);  # RECORRO PARA ELIMINAR LOS CAMPOS VACIOS O NULOS
-        $valor = $convertir[$i];
         unset($valor[$i]);
-        
     }
+    // for ($j=2; $j < count($valor)  ; $j++) { 
+    //     $valores = $valor[$j];
+    //     echo ($valores)."<br>";
+    // }
     $conceptoArreglo = array();
+    $datoConcepto = "";
+    enviarDato($datoConcepto);
     for ($i = 1; $i < 3; $i++) {  # RECORRO PARA TRAER SOLO LOS CONCEPTOS DE FORMA MANUAL 
         $concepto = $convertir[$i][1];
+        $datoConcepto = $concepto;
+        // if(empty($datoConcepto)){
+        //     break;
+        // }
         array_push($conceptoArreglo, $concepto); # CONVIERTO LO ENCONTRADO A UN ARREGLO Y LO CARGO AL A VARIABLE CONCEPTOARREGLO
     }
     
@@ -58,6 +84,7 @@ $arreglo = obtener();
 <body>
     <div class="container">
     <div class="table-responsive">
+        <form action="./Enviar.php" method="POST">
         <table class="table table-bordered table-primary">
             <thead class="text-center">
                 <tr>
@@ -79,6 +106,8 @@ $arreglo = obtener();
                 <?php } ?>
             </tbody>
         </table>
+        <input type="submit" value="Enviar">
+        </form>
         <table class="table table-bordered table-primary">
             <thead class="text-center">
                 <tr>
@@ -103,5 +132,4 @@ $arreglo = obtener();
     </div>
     </div>
 </body>
-
 </html>
