@@ -1,8 +1,38 @@
-
 <?php
-
-
-
+function agregarConcepto($descripcion)
+{
+    include("./conexion.php");
+    $busqueda = $conexion->prepare("SELECT descripcion FROM prueba WHERE descripcion = '$descripcion'");
+    $busqueda->execute();
+    $registros = $busqueda->fetchAll(PDO::FETCH_ASSOC);
+    // echo $registros['descripcion'];
+    if(empty($registros)){
+        $sentencia = $conexion->prepare("INSERT INTO prueba (id,
+            descripcion) 
+            VALUES(NULL, 
+            '$descripcion')");
+            $sentencia->execute();
+    }else{
+        foreach ($registros as $registro) {
+            if ($registro['descripcion'] == $descripcion){
+            }
+        }
+    }
+}
+function agregarKpi($concepto,$periodo,$valor)
+{
+    // echo $concepto,$periodo,$valor;
+    include("./conexion.php");
+    $sentencia = $conexion->prepare("INSERT INTO rrhh_datos (id,
+                                    concepto,
+                                    periodo,
+                                    valor) 
+                                    VALUES(NULL, 
+                                    '$concepto',
+                                    '$periodo',
+                                    '$valor')");
+    $sentencia->execute();
+}
 function convertirArreglo()
 {
     // OBTENER EL DATO DEL POST Y CONVERTIRLO A UN ARRAY
@@ -27,7 +57,7 @@ function obtener()
     $convertir = convertirArreglo();
     $fecha = $convertir[0]; # ME TRAE DE MANERA MANUAL TODO LAS FECHAS QUE ESTAN EN LA POSICION 0
     $valor = $convertir[1];
-    
+
     // for ($j=1; $j < count($valor) ; $j++) { 
     //     $valores = $valor[$j];
     //     print_r($valores);
@@ -46,22 +76,23 @@ function obtener()
     for ($i = 1; $i < 3; $i++) {  # RECORRO PARA TRAER SOLO LOS CONCEPTOS DE FORMA MANUAL 
         $concepto = $convertir[$i][1];
         $datoConcepto = $concepto;
+        agregarConcepto($datoConcepto);
         // if(empty($datoConcepto)){
         //     break;
         // }
         array_push($conceptoArreglo, $concepto); # CONVIERTO LO ENCONTRADO A UN ARREGLO Y LO CARGO AL A VARIABLE CONCEPTOARREGLO
     }
-    
+
     $arreglo = array($fecha, $valor, $conceptoArreglo);
     return $arreglo;
 }
 
 $arreglo = obtener();
-
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -74,53 +105,29 @@ $arreglo = obtener();
 
 <body>
     <div class="container">
-    <div class="table-responsive">
-        <form action="./Enviar.php" method="POST">
-        <table class="table table-bordered table-primary">
-            <thead class="text-center">
-                <tr>
-                    <th>CONCEPTO</th>
-                    <th>FECHA</th>
-                    <th>VALOR</th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php  
-            list($fechas,$valores,$conceptos) = $arreglo;
-            ?>
-            <?php for ($i=2; $i < count($fechas) ; $i++) {  ?>    
-                <tr>   
-                    <td><?php echo $conceptos[1]?></td>
-                    <td><?php echo $fechas[$i]?></td>
-                    <td><?php echo $valores[$i]?></td>
-                </tr>
-                <?php } ?>
-            </tbody>
-        </table>
-        <input type="submit" value="Enviar">
-        </form>
-        <table class="table table-bordered table-primary">
-            <thead class="text-center">
-                <tr>
-                    <th>CONCEPTO</th>
-                    <th>FECHA</th>
-                    <th>VALOR</th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php  
-            list($fechas,$valores,$conceptos) = $arreglo;
-            ?>
-            <?php for ($i=2; $i < count($fechas) ; $i++) {  ?>    
-                <tr>   
-                    <td><?php echo $conceptos[0]?></td>
-                    <td><?php echo $fechas[$i]?></td>
-                    <td><?php echo $valores[$i]?></td>
-                </tr>
-                <?php } ?>
-            </tbody>
-        </table>
-    </div>
-    </div>
-</body>
-</html>
+        <div class="table-responsive">
+            <form action="./Enviar.php" method="POST">
+                <table class="table table-bordered table-primary">
+                    <thead class="text-center">
+                        <tr>
+                            <th>CONCEPTO</th>
+                            <th>FECHA</th>
+                            <th>VALOR</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        list($fechas, $valores, $conceptos) = $arreglo;
+                        ?>
+                        <?php for ($i = 2; $i < count($fechas); $i++) {  ?>
+                            <tr>
+                                <td><?php echo $conceptos[1] ?></td>
+                                <td><?php echo $fechas[$i] ?></td>
+                                <td><?php echo $valores[$i] ?></td>
+                            </tr>
+                        <?php 
+                        agregarKpi($conceptos[1],$fechas[$i],$valores[$i]);
+                    } ?>
+                    </tbody>
+                </table>
+            </form>
