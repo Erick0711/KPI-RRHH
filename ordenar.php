@@ -36,42 +36,8 @@ function agregarKpi($concepto,$periodo,$valor)
     $igualdadDato->execute();
     $igualdad = $igualdadDato->fetchAll(PDO::FETCH_ASSOC);
 
-
-    // switch (!empty($registros) && !empty($igualdad)) {
-    //     case $igualdad[0]['concepto_id'] != $idConcepto && $igualdad[0]['periodo'] != $periodo && $igualdad[0]['valor'] != $valor:
-    //         $sentencia = $conexion->prepare("INSERT INTO rrhh_datos (id,
-    //         concepto_id,
-    //         periodo,
-    //         valor) 
-    //         VALUES(NULL, 
-    //         '$idConcepto',
-    //         '$periodo',
-    //         '$valor')");
-    //         $sentencia->execute(); 
-    //         break;
-            
-    //     case $igualdad[0]['concepto_id'] == $idConcepto && $igualdad[0]['periodo'] == $periodo && $igualdad[0]['valor'] == $valor:
-    //         $sentencia = $conexion->prepare("INSERT INTO rrhh_datos (id,
-    //         concepto_id,
-    //         periodo,
-    //         valor) 
-    //         VALUES(NULL, 
-    //         '$idConcepto',
-    //         '$periodo',
-    //         '$valor')");
-    //         $sentencia->execute(); 
-    //         break;
-            
-    //     default:
-    //         echo "No existe ningun dato en el arreglo";
-    //         break;
-    // }
-
-    if(isset($registros))
-    {
-        if($igualdad[0]['concepto_id'] == $idConcepto && $igualdad[0]['periodo'] == $periodo && $igualdad[0]['valor'] == $valor){
-                return "El dato ya existe";
-        }else{
+    switch (!empty($registros)) {
+        case empty($igualdad):
             $sentencia = $conexion->prepare("INSERT INTO rrhh_datos (id,
             concepto_id,
             periodo,
@@ -81,10 +47,36 @@ function agregarKpi($concepto,$periodo,$valor)
             '$periodo',
             '$valor')");
             $sentencia->execute(); 
-        }
-    }else{
-        echo "El dato del concepto no existe";
+            break;
+        case !empty($igualdad):
+                if($igualdad[0]['concepto_id'] == $idConcepto && $igualdad[0]['periodo'] == $periodo && $igualdad[0]['valor'] == $valor){
+                    echo "El dato ya existe";
+                }
+            break;
+        default:
+            echo "El array de los registros concepto esta vacio";
+            break;
     }
+
+    // if(isset($registros))
+    // {
+
+    //     if($igualdad[0]['concepto_id'] == $idConcepto && $igualdad[0]['periodo'] == $periodo && $igualdad[0]['valor'] == $valor){
+    //             echo "El dato ya existe";
+    //     }elseif($igualdad[0]['concepto_id'] != $idConcepto && $igualdad[0]['periodo'] != $periodo && $igualdad[0]['valor'] != $valor){
+    //         $sentencia = $conexion->prepare("INSERT INTO rrhh_datos (id,
+    //         concepto_id,
+    //         periodo,
+    //         valor) 
+    //         VALUES(NULL, 
+    //         '$idConcepto',
+    //         '$periodo',
+    //         '$valor')");
+    //         $sentencia->execute(); 
+    //     }
+    // }else{
+    //     echo "El dato del concepto no existe";
+    // }
 }
 function convertirArreglo()
 {
