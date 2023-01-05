@@ -1,6 +1,10 @@
 <?php
 
+function agregarIndicador()
+{
+    include('./conexion.php');
 
+}
 function agregarConcepto($descripcion)
 {
     include("./conexion.php");
@@ -58,25 +62,6 @@ function agregarKpi($concepto,$periodo,$valor)
             break;
     }
 
-    // if(isset($registros))
-    // {
-
-    //     if($igualdad[0]['concepto_id'] == $idConcepto && $igualdad[0]['periodo'] == $periodo && $igualdad[0]['valor'] == $valor){
-    //             echo "El dato ya existe";
-    //     }elseif($igualdad[0]['concepto_id'] != $idConcepto && $igualdad[0]['periodo'] != $periodo && $igualdad[0]['valor'] != $valor){
-    //         $sentencia = $conexion->prepare("INSERT INTO rrhh_datos (id,
-    //         concepto_id,
-    //         periodo,
-    //         valor) 
-    //         VALUES(NULL, 
-    //         '$idConcepto',
-    //         '$periodo',
-    //         '$valor')");
-    //         $sentencia->execute(); 
-    //     }
-    // }else{
-    //     echo "El dato del concepto no existe";
-    // }
 }
 function convertirArreglo()
 {
@@ -92,10 +77,11 @@ function convertirArreglo()
             $j++;
             $i++;
         }
-        return $convertir;
+        var_dump($convertir);
     }
 }
-
+convertirArreglo();
+die();
 function obtener()
 {
     
